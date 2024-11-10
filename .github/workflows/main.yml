@@ -3,26 +3,28 @@ name: Deploy Discord Bot
 on:
   push:
     branches:
-      - main  # Работает при каждом пуше в главную ветку
+      - main  # Срабатывает при пуше в основную ветку
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest  # Среда для выполнения действий
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Клонируем репозиторий
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4  # Настроим Python
       with:
-        python-version: '3.12'  # Укажите нужную версию Python
+        python-version: '3.9'  # Укажите версию Python, которую используете
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements.txt  # Устанавливаем зависимости из requirements.txt
 
-    - name: Run the bot
-      run: |
-        python bot.py
+    - name: Set up Discord bot token
+      run: echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" >> $GITHUB_ENV  # Используем секретный токен
+
+    - name: Run bot
+      run: python bot.py  # Запускаем бота (замените на имя вашего скрипта)
